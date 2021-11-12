@@ -4,10 +4,54 @@
 
 <h2>Search in TMDb</h2>
 <%# Part 5 here %>
+<% flash.each do |key, value| %>
+  <div class="alert alert-<%= key %> alert-dismissible fade show" role="alert">
+    <span class="mesage-value"><%= value %></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% end %>
+
+<table class="table table-striped col-md-12" id="search_movies">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Rating</th>
+      <th>release_date</th>
+      <th>Synopsis</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @movies.each do |movie| %>
+      <tr>
+        <td>
+          <%= movie.title %>
+        </td>
+        <td>
+          <%= movie.rating %>
+        </td>
+        <td>
+          <%= movie.release_date %>
+        </td>
+        <td>
+          <%= movie.description %>
+        </td>
+        <td>
+          <%= form_tag search_tmdb_path, method: :post, id: "add_queried_movie_form" do %>
+          <%= hidden_field_tag :title, movie.title %>
+          <%= hidden_field_tag :rating, movie.rating %>
+          <%= hidden_field_tag :release_date, movie.release_date %>
+          <%= hidden_field_tag :description, movie.description %>
+          <%= submit_tag("Add Movie") %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
 <div class="search-container">
 <%# Part 1 here %>
-<%= form_tag <%# fill in here #%> do %>
+<%= form_tag search_tmdb_path, method: :get, id: "tmdb_form" do %>
     <label for="searchMovieName">Movie Name</label>
     <%= text_field_tag 'title', nil, class: "form-control", id: "movie_title_field", placeholder: "Manhunter", id: "movie_title_field"%> 
     <label for="searchReleaseDateField">Release Year</label>
@@ -26,3 +70,5 @@
   
 <% end %>
 </div>
+
+<%= link_to 'Back to movie list', movies_path, class: 'btn btn-primary col-2' %>
